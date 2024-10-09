@@ -2,14 +2,14 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Zegar Natalki</title>
+    <title>Zegar</title>
     <style>
         body { text-align: center; margin-top: 50px; }
         canvas { border: 1px solid #000; touch-action: none; }
     </style>
 </head>
 <body>
-    <h1>Zegar Natalki</h1>
+    <h1>Zegar</h1>
     <canvas id="clockCanvas" width="400" height="400"></canvas>
     <script>
         var canvas = document.getElementById("clockCanvas");
@@ -20,7 +20,7 @@
 
         // Ustawienie czasu na bieżący
         var now = new Date();
-        var time = now.getHours() % 12 * 60 + now.getMinutes(); // Czas w minutach od 0 do 720
+        var time = (now.getHours() % 12) * 60 + now.getMinutes(); // Czas w minutach od 0 do 720
 
         var dragging = false;
         var initialAngle = 0;
@@ -130,12 +130,14 @@
                 var currentAngle = Math.atan2(pos.y, pos.x);
                 if (currentAngle < 0) currentAngle += 2 * Math.PI;
 
-                var angleDiff = (currentAngle - initialAngle)/10;
+                var angleDiff = currentAngle - initialAngle;
                 if (angleDiff > Math.PI) angleDiff -= 2 * Math.PI;
                 if (angleDiff < -Math.PI) angleDiff += 2 * Math.PI;
 
-                var minuteChange = angleDiff * (360 / (2 * Math.PI));
-                time = initialTime + minuteChange * 2;
+                // Nowe obliczenie minuteChange, aby pełny obrót odpowiadał 60 minutom
+                var minuteChange = angleDiff * (60 / (2 * Math.PI));
+                time = initialTime + minuteChange;
+
                 if (time < 0) time += 720;
                 if (time >= 720) time -= 720;
 
