@@ -2,14 +2,14 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Interaktywny Zegar</title>
+    <title>_ Zegar Natalki _</title>
     <style>
         body { text-align: center; margin-top: 50px; }
         canvas { border: 1px solid #000; touch-action: none; }
     </style>
 </head>
 <body>
-    <h1>Zegar Natalki</h1>
+    <h1>Interaktywny Zegar</h1>
     <canvas id="clockCanvas" width="400" height="400"></canvas>
     <script>
         var canvas = document.getElementById("clockCanvas");
@@ -18,7 +18,7 @@
         ctx.translate(radius, radius);
         radius = radius * 0.90;
 
-        var time = 180; // Start od godziny 3:00
+        var time = 180; // Start od godziny 3:00 (180 minut)
         var dragging = false;
 
         drawClock();
@@ -71,10 +71,10 @@
         }
 
         function drawTime(ctx, radius){
-            // Czas w minutach
-            var hourAngle = (Math.PI / 6) * (time / 60);
+            // Obliczanie kątów dla wskazówek
+            var hourAngle = (Math.PI / 6) * (time / 60); // Jeden pełny obrót godziny to 12 * 60 minut
             var minuteAngle = (Math.PI / 30) * (time % 60);
-            drawHand(ctx, hourAngle, radius*0.5, radius*0.07);
+            drawHand(ctx, hourAngle % (2 * Math.PI), radius*0.5, radius*0.07); // % (2 * Math.PI) zapewnia, że kąt nie przekroczy pełnego obrotu
             drawHand(ctx, minuteAngle, radius*0.8, radius*0.07);
         }
 
@@ -112,7 +112,7 @@
         function startDrag(evt) {
             evt.preventDefault();
             dragging = true;
-            drag(evt);
+            drag(evt); // Natychmiastowe zaktualizowanie pozycji wskazówki
         }
 
         function drag(evt) {
@@ -122,8 +122,8 @@
                 var angle = Math.atan2(pos.y, pos.x);
                 if (angle < 0) angle += 2 * Math.PI;
 
-                var minutes = angle * 30 / Math.PI;
-                time = minutes;
+                // Przeliczenie kąta na czas w minutach (0-720 minut)
+                time = (angle / (2 * Math.PI)) * 720;
                 drawClock();
             }
         }
