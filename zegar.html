@@ -130,7 +130,7 @@
                 var currentAngle = Math.atan2(pos.y, pos.x);
                 if (currentAngle < 0) currentAngle += 2 * Math.PI;
 
-                var angleDiff = currentAngle - initialAngle;
+                var angleDiff = (currentAngle - initialAngle)/10;
                 if (angleDiff > Math.PI) angleDiff -= 2 * Math.PI;
                 if (angleDiff < -Math.PI) angleDiff += 2 * Math.PI;
 
