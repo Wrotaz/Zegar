@@ -118,7 +118,7 @@
             var minuteAngle = (Math.PI / 30) * (time % 60);
             var diff = Math.abs(angle - minuteAngle);
             if (diff > Math.PI) diff = 2 * Math.PI - diff;
-            if (diff < 0.5) { // Próg czułości
+            if (diff < Math.PI) { // Próg czułości
                 dragging = true;
                 prevAngle = angle;
             }
