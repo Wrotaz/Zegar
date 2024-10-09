@@ -2,14 +2,14 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>_ Zegar Natalki _</title>
+    <title>Interaktywny Zegar</title>
     <style>
         body { text-align: center; margin-top: 50px; }
         canvas { border: 1px solid #000; touch-action: none; }
     </style>
 </head>
 <body>
-    <h1>Interaktywny Zegar</h1>
+    <h1>_ Zegar Natalki _</h1>
     <canvas id="clockCanvas" width="400" height="400"></canvas>
     <script>
         var canvas = document.getElementById("clockCanvas");
@@ -18,10 +18,19 @@
         ctx.translate(radius, radius);
         radius = radius * 0.90;
 
-        var time = 180; // Start od godziny 3:00 (180 minut)
+        var time; // Zmienna przechowująca czas w minutach od godziny 12:00
         var dragging = false;
 
-        drawClock();
+        // Inicjalizacja zegara z aktualnym czasem
+        function initializeClock() {
+            var now = new Date();
+            var hours = now.getHours() % 12; // Konwersja do formatu 12-godzinnego
+            var minutes = now.getMinutes();
+            time = hours * 60 + minutes; // Obliczenie czasu w minutach od godziny 12:00
+            drawClock();
+        }
+
+        initializeClock();
 
         function drawClock() {
             ctx.clearRect(-radius, -radius, canvas.width, canvas.height);
@@ -72,9 +81,9 @@
 
         function drawTime(ctx, radius){
             // Obliczanie kątów dla wskazówek
-            var hourAngle = (Math.PI / 6) * (time / 60); // Jeden pełny obrót godziny to 12 * 60 minut
+            var hourAngle = (Math.PI / 6) * (time / 60); // Pełny obrót w 12 godzinach
             var minuteAngle = (Math.PI / 30) * (time % 60);
-            drawHand(ctx, hourAngle % (2 * Math.PI), radius*0.5, radius*0.07); // % (2 * Math.PI) zapewnia, że kąt nie przekroczy pełnego obrotu
+            drawHand(ctx, hourAngle % (2 * Math.PI), radius*0.5, radius*0.07);
             drawHand(ctx, minuteAngle, radius*0.8, radius*0.07);
         }
 
@@ -112,7 +121,7 @@
         function startDrag(evt) {
             evt.preventDefault();
             dragging = true;
-            drag(evt); // Natychmiastowe zaktualizowanie pozycji wskazówki
+            drag(evt);
         }
 
         function drag(evt) {
@@ -123,7 +132,7 @@
                 if (angle < 0) angle += 2 * Math.PI;
 
                 // Przeliczenie kąta na czas w minutach (0-720 minut)
-                time = (angle / (2 * Math.PI)) * 720;
+                time = (angle / (2 * Math.PI)) * 60;
                 drawClock();
             }
         }
