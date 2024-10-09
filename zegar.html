@@ -20,7 +20,6 @@
 
         var time = 180; // Start od godziny 3:00
         var dragging = false;
-        var prevAngle = 0;
 
         drawClock();
 
@@ -102,8 +101,8 @@
 
         function getMousePos(evt) {
             var rect = canvas.getBoundingClientRect();
-            var clientX = evt.clientX || evt.touches[0].clientX;
-            var clientY = evt.clientY || evt.touches[0].clientY;
+            var clientX = evt.clientX || (evt.touches && evt.touches[0].clientX);
+            var clientY = evt.clientY || (evt.touches && evt.touches[0].clientY);
             return {
                 x: clientX - rect.left - radius,
                 y: clientY - rect.top - radius
@@ -112,16 +111,8 @@
 
         function startDrag(evt) {
             evt.preventDefault();
-            var pos = getMousePos(evt);
-            var angle = Math.atan2(pos.y, pos.x);
-            if (angle < 0) angle += 2 * Math.PI;
-            var minuteAngle = (Math.PI / 30) * (time % 60);
-            var diff = Math.abs(angle - minuteAngle);
-            if (diff > Math.PI) diff = 2 * Math.PI - diff;
-            if (diff < 0.5) { // Próg czułości
-                dragging = true;
-                prevAngle = angle;
-            }
+            dragging = true;
+            drag(evt);
         }
 
         function drag(evt) {
@@ -131,15 +122,8 @@
                 var angle = Math.atan2(pos.y, pos.x);
                 if (angle < 0) angle += 2 * Math.PI;
 
-                var angleDiff = angle - prevAngle;
-                if (angleDiff > Math.PI) angleDiff -= 2 * Math.PI;
-                if (angleDiff < -Math.PI) angleDiff += 2 * Math.PI;
-
-                var minuteChange = angleDiff * 30 / Math.PI;
-                time += minuteChange;
-                if (time < 0) time += 720;
-                if (time >= 720) time -= 720;
-                prevAngle = angle;
+                var minutes = angle * 30 / Math.PI;
+                time = minutes;
                 drawClock();
             }
         }
