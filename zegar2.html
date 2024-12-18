@@ -97,11 +97,12 @@
 
       countdownInterval = setInterval(() => {
         currentCountdown--;
-        if (currentCountdown >= 0) {
+        if (currentCountdown > 0) {
           updateRightCounter(currentCountdown);
         } else {
           clearInterval(countdownInterval);
           countdownInterval = null;
+          updateRightCounter(0);
           rightCounterElement.style.color = "red"; // Zmień kolor na czerwony
           leftCounter++;
           updateLeftCounter();
