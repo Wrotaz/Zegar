@@ -11,28 +11,35 @@
       margin: 0;
       font-family: Arial, sans-serif;
     }
+    
     .left, .right {
       display: flex;
-      align-items: center;
-      justify-content: center;
+      align-items: center; /* Wyrównanie w pionie */
+      justify-content: center; /* Wyrównanie w poziomie */
     }
+    
     .left {
       width: 33%;
       background-color: #f0f0f0;
       flex-direction: column;
     }
+    
     .right {
       width: 67%;
       background-color: #e0e0e0;
       cursor: pointer;
     }
+    
     .counter {
-      font-size: 16rem; /* Czcionka powiększona 4-krotnie */
+      font-size: 16rem; /* Wielkość czcionki */
       color: black;
+      line-height: 1; /* Usuń różnicę w wysokości tekstu */
     }
+    
     .buttons {
       margin-top: 20px;
     }
+    
     .buttons button {
       font-size: 2rem;
       margin: 0 10px;
