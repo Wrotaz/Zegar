@@ -27,13 +27,14 @@
       cursor: pointer;
     }
     .counter {
-      font-size: 4rem;
+      font-size: 16rem; /* Czcionka powiększona 4-krotnie */
+      color: black;
     }
     .buttons {
       margin-top: 20px;
     }
     .buttons button {
-      font-size: 1.5rem;
+      font-size: 2rem;
       margin: 0 10px;
       padding: 10px 20px;
     }
@@ -84,22 +85,40 @@
 
     // Funkcja obsługująca odliczanie na prawym liczniku
     function startCountdown() {
-      if (countdownInterval) return; // Nie pozwól na uruchomienie wielu odliczań jednocześnie
+      if (countdownInterval) {
+        // Resetuj licznik i odliczaj od nowa
+        resetCountdown();
+        return;
+      }
 
+      rightCounterElement.style.color = "black"; // Przywróć kolor czcionki
       let currentCountdown = countdownValue;
-      rightCounterElement.textContent = `0:${currentCountdown.toString().padStart(2, "0")}`;
+      updateRightCounter(currentCountdown);
 
       countdownInterval = setInterval(() => {
         currentCountdown--;
         if (currentCountdown >= 0) {
-          rightCounterElement.textContent = `0:${currentCountdown.toString().padStart(2, "0")}`;
+          updateRightCounter(currentCountdown);
         } else {
           clearInterval(countdownInterval);
           countdownInterval = null;
+          rightCounterElement.style.color = "red"; // Zmień kolor na czerwony
           leftCounter++;
           updateLeftCounter();
         }
       }, 1000);
+    }
+
+    // Funkcja aktualizująca prawy licznik
+    function updateRightCounter(value) {
+      rightCounterElement.textContent = `0:${value.toString().padStart(2, "0")}`;
+    }
+
+    // Funkcja resetująca odliczanie prawego licznika
+    function resetCountdown() {
+      clearInterval(countdownInterval);
+      countdownInterval = null;
+      startCountdown();
     }
 
     // Obsługa kliknięcia na prawą część ekranu
