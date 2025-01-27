@@ -1,8 +1,11 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-  <!-- Pozostałe elementy head pozostają bez zmian -->
-  <style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Liczniki</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
     /* Dodaj te nowe style do istniejącego CSS */
     .progress-ring__circle.complete {
       stroke: #ff4444;
@@ -32,10 +35,25 @@
     }
   </style>
 </head>
-<body>
-  <!-- Reszta HTML pozostaje bez zmian -->
 
-  <script>
+<body>
+  <div class="left">
+    <div class="counter-container">
+      <div class="counter" id="left-counter">0</div>
+    </div>
+    <div class="buttons">
+      <button id="decrement">−</button>
+      <button id="increment">+</button>
+    </div>
+  </div>
+  <div class="right">
+    <svg class="progress-ring" id="progress-ring">
+      <circle class="progress-ring__circle" stroke="rgba(255,255,255,0.1)" stroke-width="4" fill="transparent" r="140" cx="150" cy="150"/>
+    </svg>
+    <div class="counter" id="right-counter">0:10</div>
+  </div>
+
+ <script>
     // Zmodyfikuj funkcję startCountdown
     function startCountdown() {
       if (countdownInterval) {
