@@ -61,6 +61,8 @@
       font-weight: 700;
       text-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
       transition: all 0.3s ease;
+      position: relative;
+      z-index: 2;
     }
 
     .buttons {
@@ -83,6 +85,24 @@
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     }
 
+    .progress-circle {
+      position: absolute;
+      width: 80vmin;
+      height: 80vmin;
+      max-width: 600px;
+      max-height: 600px;
+      pointer-events: none;
+      transform: rotate(-90deg);
+    }
+
+    .progress-ring {
+      fill: none;
+      stroke: rgba(255, 255, 255, 0.3);
+      stroke-width: 6;
+      stroke-linecap: round;
+      transition: stroke-dashoffset 0.5s linear;
+    }
+
     .buttons button:hover {
       background: rgba(255, 255, 255, 0.3);
       transform: translateY(-2px);
@@ -94,7 +114,6 @@
     }
 
     #right-counter {
-      position: relative;
       font-weight: 300;
       letter-spacing: 3px;
     }
@@ -132,11 +151,13 @@
     </div>
   </div>
   <div class="right">
+    <svg class="progress-circle" viewBox="0 0 100 100">
+      <circle class="progress-ring" cx="50" cy="50" r="45" />
+    </svg>
     <div class="counter" id="right-counter">0:10</div>
   </div>
 
   <script>
-    // (Skrypt pozostaje bez zmian, ewentualnie dodać animacje w odpowiednich miejscach)
     let leftCounter = 0;
     let countdownValue = 10;
     let countdownInterval = null;
@@ -145,6 +166,19 @@
     const rightCounterElement = document.getElementById("right-counter");
     const incrementButton = document.getElementById("increment");
     const decrementButton = document.getElementById("decrement");
+    const progressRing = document.querySelector('.progress-ring');
+
+    // Inicjalizacja paska postępu
+    const radius = progressRing.r.baseVal.value;
+    const circumference = 2 * Math.PI * radius;
+    progressRing.style.strokeDasharray = `${circumference} ${circumference}`;
+    progressRing.style.strokeDashoffset = circumference;
+
+    function updateProgress(value) {
+      const progress = (value / countdownValue) * 100;
+      const offset = circumference * (1 - progress / 100);
+      progressRing.style.strokeDashoffset = offset;
+    }
 
     function updateLeftCounter() {
       leftCounterElement.textContent = leftCounter;
@@ -176,15 +210,18 @@
       rightCounterElement.classList.remove('pulsing');
       let currentCountdown = countdownValue;
       updateRightCounter(currentCountdown);
+      updateProgress(currentCountdown);
 
       countdownInterval = setInterval(() => {
         currentCountdown--;
         if (currentCountdown > 0) {
           updateRightCounter(currentCountdown);
+          updateProgress(currentCountdown);
         } else {
           clearInterval(countdownInterval);
           countdownInterval = null;
           updateRightCounter(0);
+          updateProgress(0);
           rightCounterElement.style.color = "#ff4757";
           rightCounterElement.classList.add('pulsing');
           leftCounter++;
