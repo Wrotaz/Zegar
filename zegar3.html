@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Liczniki</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      display: flex;
+      height: 100vh;
+      margin: 0;
+      background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+      font-family: 'Inter', sans-serif;
+    }
+
+    .left, .right {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      transition: all 0.3s ease;
+    }
+
+    .left {
+      width: 33%;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-right: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .right {
+      width: 67%;
+      background: rgba(0, 0, 0, 0.2);
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .counter {
+      font-size: 12rem;
+      font-weight: 300;
+      background: linear-gradient(45deg, #ffffff, #e0e0e0);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .buttons {
+      margin-top: 2rem;
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    .buttons button {
+      width: 60px;
+      height: 60px;
+      border: none;
+      border-radius: 50%;
+      background: linear-gradient(145deg, #2d2d2d, #242424);
+      color: #fff;
+      font-size: 2rem;
+      cursor: pointer;
+      box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2),
+                  -3px -3px 5px rgba(255, 255, 255, 0.05);
+      transition: all 0.2s ease;
+    }
+
+    .buttons button:hover {
+      transform: scale(1.1);
+      box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.3),
+                  -4px -4px 6px rgba(255, 255, 255, 0.1);
+    }
+
+    .buttons button:active {
+      transform: scale(0.95);
+    }
+
+    #right-counter {
+      position: relative;
+      z-index: 2;
+      font-size: 8rem;
+      background: linear-gradient(45deg, #00ff88, #00ccff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .right::before {
+      content: '';
+      position: absolute;
+      width: 300%;
+      height: 300%;
+      background: linear-gradient(45deg, #00ff8855, #00ccff55);
+      animation: rotate 20s linear infinite;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .right:hover::before {
+      opacity: 0.1;
+    }
+
+    @keyframes rotate {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .progress-ring {
+      position: absolute;
+      width: 300px;
+      height: 300px;
+    }
+
+    .progress-ring__circle {
+      transition: stroke-dashoffset 0.35s;
+      transform: rotate(-90deg);
+      transform-origin: 50% 50%;
+    }
+
+  </style>
+</head>
+<body>
+  <div class="left">
+    <div class="counter-container">
+      <div class="counter" id="left-counter">0</div>
+    </div>
+    <div class="buttons">
+      <button id="decrement">−</button>
+      <button id="increment">+</button>
+    </div>
+  </div>
+  <div class="right">
+    <svg class="progress-ring" id="progress-ring">
+      <circle class="progress-ring__circle" stroke="rgba(255,255,255,0.1)" stroke-width="4" fill="transparent" r="140" cx="150" cy="150"/>
+    </svg>
+    <div class="counter" id="right-counter">0:10</div>
+  </div>
+
+  <script>
+    let leftCounter = 0;
+    let countdownValue = 10;
+    let countdownInterval = null;
+
+    const leftCounterElement = document.getElementById("left-counter");
+    const rightCounterElement = document.getElementById("right-counter");
+    const incrementButton = document.getElementById("increment");
+    const decrementButton = document.getElementById("decrement");
+    const progressRing = document.querySelector('.progress-ring__circle');
+
+    // Inicjalizacja okręgu progresu
+    const radius = progressRing.r.baseVal.value;
+    const circumference = radius * 2 * Math.PI;
+    progressRing.style.strokeDasharray = `${circumference} ${circumference}`;
+    progressRing.style.strokeDashoffset = circumference;
+
+    function setProgress(percent) {
+      const offset = circumference - (percent / 100) * circumference;
+      progressRing.style.strokeDashoffset = offset;
+    }
+
+    function updateLeftCounter() {
+      leftCounterElement.textContent = leftCounter;
+      leftCounterElement.style.transform = 'scale(1.1)';
+      setTimeout(() => leftCounterElement.style.transform = 'scale(1)', 100);
+    }
+
+    incrementButton.addEventListener("click", () => {
+      if (leftCounter < 99) {
+        leftCounter++;
+        updateLeftCounter();
+      }
+    });
+
+    decrementButton.addEventListener("click", () => {
+      if (leftCounter > 0) {
+        leftCounter--;
+        updateLeftCounter();
+      }
+    });
+
+    function startCountdown() {
+      if (countdownInterval) {
+        resetCountdown();
+        return;
+      }
+
+      let currentCountdown = countdownValue;
+      updateRightCounter(currentCountdown);
+      setProgress(0);
+
+      countdownInterval = setInterval(() => {
+        currentCountdown--;
+        const progress = ((countdownValue - currentCountdown) / countdownValue) * 100;
+        setProgress(progress);
+        
+        if (currentCountdown > 0) {
+          updateRightCounter(currentCountdown);
+        } else {
+          clearInterval(countdownInterval);
+          countdownInterval = null;
+          updateRightCounter(0);
+          rightCounterElement.style.background = 'linear-gradient(45deg, #ff0000, #ff6666)';
+          leftCounter++;
+          updateLeftCounter();
+          setTimeout(() => {
+            rightCounterElement.style.background = 'linear-gradient(45deg, #00ff88, #00ccff)';
+          }, 1000);
+        }
+      }, 1000);
+    }
+
+    function updateRightCounter(value) {
+      rightCounterElement.textContent = `0:${value.toString().padStart(2, "0")}`;
+    }
+
+    function resetCountdown() {
+      clearInterval(countdownInterval);
+      countdownInterval = null;
+      startCountdown();
+    }
+
+    document.querySelector(".right").addEventListener("click", startCountdown);
+  </script>
+</body>
+</html>
