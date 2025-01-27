@@ -63,6 +63,7 @@
       transition: all 0.3s ease;
       position: relative;
       z-index: 2;
+      font-variant-numeric: tabular-nums;
     }
 
     .buttons {
@@ -87,20 +88,41 @@
 
     .progress-circle {
       position: absolute;
-      width: 80vmin;
-      height: 80vmin;
-      max-width: 600px;
-      max-height: 600px;
+      width: 60vmin;
+      height: 60vmin;
+      max-width: 500px;
+      max-height: 500px;
       pointer-events: none;
       transform: rotate(-90deg);
+      z-index: 1;
     }
 
     .progress-ring {
       fill: none;
-      stroke: rgba(255, 255, 255, 0.3);
-      stroke-width: 6;
+      stroke: rgba(255, 255, 255, 0.4);
+      stroke-width: 8;
       stroke-linecap: round;
-      transition: stroke-dashoffset 0.5s linear;
+      transition: all 0.5s linear;
+    }
+
+    #angry-bird {
+      position: absolute;
+      right: -200px;
+      bottom: 20px;
+      height: 120px;
+      transition: all 0.5s ease-out;
+      z-index: 3;
+      display: none;
+    }
+
+    #angry-bird.show-red {
+      display: block;
+      animation: slideIn 0.5s ease-out forwards;
+    }
+
+    @keyframes slideIn {
+      from { right: -200px; }
+      to { right: 20px; }
     }
 
     .buttons button:hover {
@@ -116,6 +138,8 @@
     #right-counter {
       font-weight: 300;
       letter-spacing: 3px;
+      min-width: 240px;
+      text-align: center;
     }
 
     .pulsing {
@@ -137,6 +161,14 @@
       .counter {
         font-size: 10rem;
       }
+      .progress-circle {
+        width: 50vmin;
+        height: 50vmin;
+      }
+      #angry-bird {
+        height: 80px;
+        bottom: 10px;
+      }
     }
   </style>
 </head>
@@ -152,9 +184,22 @@
   </div>
   <div class="right">
     <svg class="progress-circle" viewBox="0 0 100 100">
-      <circle class="progress-ring" cx="50" cy="50" r="45" />
+      <circle class="progress-ring" cx="50" cy="50" r="38" />
     </svg>
     <div class="counter" id="right-counter">0:10</div>
+    
+    <svg id="angry-bird" viewBox="0 0 100 100" width="120" height="120">
+      <circle cx="50" cy="50" r="45" fill="#FF0000"/>
+      <circle cx="35" cy="40" r="15" fill="white"/>
+      <circle cx="65" cy="40" r="15" fill="white"/>
+      <circle cx="35" cy="40" r="7" fill="#333"/>
+      <circle cx="65" cy="40" r="7" fill="#333"/>
+      <path d="M25 30 Q35 25 45 30" stroke="#333" stroke-width="3" fill="none"/>
+      <path d="M55 30 Q65 25 75 30" stroke="#333" stroke-width="3" fill="none"/>
+      <path d="M40 60 L60 60 L50 70 Z" fill="#FFA500"/>
+      <path d="M80 50 Q90 45 95 50 Q90 55 80 50" fill="#CC0000"/>
+      <path d="M85 45 Q90 40 95 45 Q90 50 85 45" fill="#CC0000"/>
+    </svg>
   </div>
 
   <script>
@@ -167,8 +212,8 @@
     const incrementButton = document.getElementById("increment");
     const decrementButton = document.getElementById("decrement");
     const progressRing = document.querySelector('.progress-ring');
+    const angryBird = document.getElementById('angry-bird');
 
-    // Inicjalizacja paska postępu
     const radius = progressRing.r.baseVal.value;
     const circumference = 2 * Math.PI * radius;
     progressRing.style.strokeDasharray = `${circumference} ${circumference}`;
@@ -178,6 +223,12 @@
       const progress = (value / countdownValue) * 100;
       const offset = circumference * (1 - progress / 100);
       progressRing.style.strokeDashoffset = offset;
+      
+      if (value === 0) {
+        progressRing.style.strokeWidth = '0';
+      } else {
+        progressRing.style.strokeWidth = '8';
+      }
     }
 
     function updateLeftCounter() {
@@ -201,6 +252,8 @@
     });
 
     function startCountdown() {
+      angryBird.classList.remove('show-red');
+      progressRing.style.strokeWidth = '8';
       if (countdownInterval) {
         resetCountdown();
         return;
@@ -224,6 +277,7 @@
           updateProgress(0);
           rightCounterElement.style.color = "#ff4757";
           rightCounterElement.classList.add('pulsing');
+          angryBird.classList.add('show-red');
           leftCounter++;
           updateLeftCounter();
         }
