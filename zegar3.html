@@ -21,6 +21,7 @@
       align-items: center;
       backdrop-filter: blur(10px);
       transition: all 0.3s ease;
+      position: relative;
     }
 
     .left {
@@ -34,24 +35,7 @@
       width: 67%;
       background: rgba(0, 0, 0, 0.05);
       cursor: pointer;
-      position: relative;
       overflow: hidden;
-    }
-
-    .right::before {
-      content: '';
-      position: absolute;
-      top: -50%;
-      left: -50%;
-      width: 200%;
-      height: 200%;
-      background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
-      transform: rotate(45deg);
-      transition: all 0.5s;
-    }
-
-    .right:hover::before {
-      animation: shine 1.5s;
     }
 
     .counter {
@@ -62,28 +46,8 @@
       text-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
       transition: all 0.3s ease;
       position: relative;
-      z-index: 2;
+      z-index: 4;
       font-variant-numeric: tabular-nums;
-    }
-
-    .buttons {
-      margin-top: 2rem;
-      display: flex;
-      gap: 1.5rem;
-    }
-
-    .buttons button {
-      font-size: 2rem;
-      width: 60px;
-      height: 60px;
-      border: none;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.2);
-      color: white;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      backdrop-filter: blur(5px);
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     }
 
     .progress-circle {
@@ -105,17 +69,16 @@
       transition: all 0.5s linear;
     }
 
-    #angry-bird {
+    .angry-bird {
       position: absolute;
       right: -200px;
       bottom: 20px;
       height: 120px;
-      transition: all 0.5s ease-out;
-      z-index: 3;
+      z-index: 2;
       display: none;
     }
 
-    #angry-bird.show-red {
+    .angry-bird.show {
       display: block;
       animation: slideIn 0.5s ease-out forwards;
     }
@@ -125,50 +88,23 @@
       to { right: 20px; }
     }
 
-    .buttons button:hover {
-      background: rgba(255, 255, 255, 0.3);
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+    .buttons button {
+      font-size: 2rem;
+      width: 60px;
+      height: 60px;
+      border: none;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(5px);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     }
 
-    .buttons button:active {
-      transform: translateY(0);
-    }
-
-    #right-counter {
-      font-weight: 300;
-      letter-spacing: 3px;
-      min-width: 240px;
-      text-align: center;
-    }
-
-    .pulsing {
-      animation: pulse 1s infinite;
-    }
-
-    @keyframes pulse {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.05); }
-      100% { transform: scale(1); }
-    }
-
-    @keyframes shine {
-      0% { left: -50%; }
-      100% { left: 150%; }
-    }
-
-    @media (max-width: 768px) {
-      .counter {
-        font-size: 10rem;
-      }
-      .progress-circle {
-        width: 50vmin;
-        height: 50vmin;
-      }
-      #angry-bird {
-        height: 80px;
-        bottom: 10px;
-      }
+    #terrence-bird {
+      height: 180px;
+      bottom: 40px;
     }
   </style>
 </head>
@@ -184,25 +120,32 @@
   </div>
   <div class="right">
     <svg class="progress-circle" viewBox="0 0 100 100">
-      <circle class="progress-ring" cx="50" cy="50" r="38" />
+      <circle class="progress-ring" cx="50" cy="50" r="38"/>
     </svg>
     <div class="counter" id="right-counter">0:10</div>
-    
-    <svg id="angry-bird" viewBox="0 0 100 100" width="120" height="120">
-      <circle cx="50" cy="50" r="45" fill="#FF0000"/>
-      <circle cx="35" cy="40" r="15" fill="white"/>
-      <circle cx="65" cy="40" r="15" fill="white"/>
-      <circle cx="35" cy="40" r="7" fill="#333"/>
-      <circle cx="65" cy="40" r="7" fill="#333"/>
-      <path d="M25 30 Q35 25 45 30" stroke="#333" stroke-width="3" fill="none"/>
-      <path d="M55 30 Q65 25 75 30" stroke="#333" stroke-width="3" fill="none"/>
-      <path d="M40 60 L60 60 L50 70 Z" fill="#FFA500"/>
-      <path d="M80 50 Q90 45 95 50 Q90 55 80 50" fill="#CC0000"/>
-      <path d="M85 45 Q90 40 95 45 Q90 50 85 45" fill="#CC0000"/>
-    </svg>
+
+    <!-- Ptaki -->
+    <div class="angry-bird" id="red-bird"><svg><use href="#red"/></svg></div>
+    <div class="angry-bird" id="bomb-bird"><svg><use href="#bomb"/></svg></div>
+    <div class="angry-bird" id="chuck-bird"><svg><use href="#chuck"/></svg></div>
+    <div class="angry-bird" id="silver-bird"><svg><use href="#silver"/></svg></div>
+    <div class="angry-bird" id="blues-container">
+      <svg class="blue-bird"><use href="#blue"/></svg>
+      <svg class="blue-bird"><use href="#blue"/></svg>
+      <svg class="blue-bird"><use href="#blue"/></svg>
+    </div>
+    <div class="angry-bird" id="matilda-bird"><svg><use href="#matilda"/></svg></div>
+    <div class="angry-bird" id="zeta-bird"><svg><use href="#zeta"/></svg></div>
+    <div class="angry-bird" id="eagle-bird"><svg><use href="#eagle"/></svg></div>
+    <div class="angry-bird" id="terrence-bird"><svg><use href="#terrence"/></svg></div>
   </div>
 
   <script>
+    const birds = [
+      'red', 'bomb', 'chuck', 'silver', 'blues', 
+      'matilda', 'zeta', 'eagle', 'terrence'
+    ];
+    let currentBirdIndex = 0;
     let leftCounter = 0;
     let countdownValue = 10;
     let countdownInterval = null;
@@ -212,8 +155,8 @@
     const incrementButton = document.getElementById("increment");
     const decrementButton = document.getElementById("decrement");
     const progressRing = document.querySelector('.progress-ring');
-    const angryBird = document.getElementById('angry-bird');
 
+    // Inicjalizacja paska postępu
     const radius = progressRing.r.baseVal.value;
     const circumference = 2 * Math.PI * radius;
     progressRing.style.strokeDasharray = `${circumference} ${circumference}`;
@@ -223,12 +166,7 @@
       const progress = (value / countdownValue) * 100;
       const offset = circumference * (1 - progress / 100);
       progressRing.style.strokeDashoffset = offset;
-      
-      if (value === 0) {
-        progressRing.style.strokeWidth = '0';
-      } else {
-        progressRing.style.strokeWidth = '8';
-      }
+      progressRing.style.strokeWidth = value === 0 ? '0' : '8';
     }
 
     function updateLeftCounter() {
@@ -237,26 +175,17 @@
       setTimeout(() => leftCounterElement.style.transform = 'scale(1)', 100);
     }
 
-    incrementButton.addEventListener("click", () => {
-      if (leftCounter < 99) {
-        leftCounter++;
-        updateLeftCounter();
-      }
-    });
-
-    decrementButton.addEventListener("click", () => {
-      if (leftCounter > 0) {
-        leftCounter--;
-        updateLeftCounter();
-      }
-    });
-
     function startCountdown() {
-      angryBird.classList.remove('show-red');
+      // Reset wszystkich elementów
+      document.querySelectorAll('.angry-bird').forEach(bird => {
+        bird.classList.remove('show');
+        bird.style.display = 'none';
+      });
       progressRing.style.strokeWidth = '8';
+      
       if (countdownInterval) {
-        resetCountdown();
-        return;
+        clearInterval(countdownInterval);
+        countdownInterval = null;
       }
 
       rightCounterElement.style.color = "white";
@@ -276,8 +205,15 @@
           updateRightCounter(0);
           updateProgress(0);
           rightCounterElement.style.color = "#ff4757";
-          rightCounterElement.classList.add('pulsing');
-          angryBird.classList.add('show-red');
+          
+          const currentBird = document.getElementById(`${birds[currentBirdIndex]}-bird`);
+          if (birds[currentBirdIndex] === 'terrence') {
+            currentBird.style.height = '220px';
+          }
+          currentBird.style.display = 'block';
+          currentBird.classList.add('show');
+          
+          currentBirdIndex = (currentBirdIndex + 1) % birds.length;
           leftCounter++;
           updateLeftCounter();
         }
@@ -290,11 +226,16 @@
       setTimeout(() => rightCounterElement.style.transform = 'scale(1)', 50);
     }
 
-    function resetCountdown() {
-      clearInterval(countdownInterval);
-      countdownInterval = null;
-      startCountdown();
-    }
+    // Event listeners
+    incrementButton.addEventListener("click", () => {
+      if (leftCounter < 99) leftCounter++;
+      updateLeftCounter();
+    });
+
+    decrementButton.addEventListener("click", () => {
+      if (leftCounter > 0) leftCounter--;
+      updateLeftCounter();
+    });
 
     document.querySelector(".right").addEventListener("click", startCountdown);
   </script>
