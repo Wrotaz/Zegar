@@ -106,6 +106,25 @@
       height: 180px;
       bottom: 40px;
     }
+    
+    .angry-bird {
+      position: absolute;
+      right: -200px;
+      bottom: 20px;
+      height: 120px;
+      z-index: 3;
+      display: none;
+    }
+
+    .angry-bird.show {
+      display: block;
+      animation: slideIn 0.5s ease-out forwards;
+    }
+
+    #blues-container .blue-bird {
+      height: 80px;
+      margin: 0 5px;
+    }
   </style>
 </head>
 <body>
@@ -142,7 +161,7 @@
 
   <script>
     const birds = [
-      'red', 'bomb', 'chuck', 'silver', 'blues', 
+      'red', 'bomb', 'chuck', 'silver', 'blues-container', 
       'matilda', 'zeta', 'eagle', 'terrence'
     ];
     let currentBirdIndex = 0;
@@ -176,16 +195,14 @@
     }
 
     function startCountdown() {
-      // Reset wszystkich elementów
       document.querySelectorAll('.angry-bird').forEach(bird => {
         bird.classList.remove('show');
         bird.style.display = 'none';
       });
-      progressRing.style.strokeWidth = '8';
       
       if (countdownInterval) {
-        clearInterval(countdownInterval);
-        countdownInterval = null;
+        resetCountdown();
+        return;
       }
 
       rightCounterElement.style.color = "white";
